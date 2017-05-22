@@ -2,6 +2,7 @@
 Documentación del prototipo del juego
 
 Procedimiento:
+
 #Se importan todos los elementos de la libreria de tkinter de python
 #Se crea una ventana llamada ventana_principal
 #Se le cambia el nombre de la ventana de ventana_principal a Road Fighter Plus,
