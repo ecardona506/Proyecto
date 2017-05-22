@@ -47,6 +47,7 @@ contenida en la variable Multiplayer, dicho botón "no tiene borde",tiene fondo 
 """
 from tkinter import *
 import time
+import random
 
 ventana_principal = Tk()
 
@@ -57,12 +58,30 @@ ventana_principal.geometry("950x600")
 Fondo_img = PhotoImage(file="fondo.png")
 Fondo = Label(ventana_principal, image=Fondo_img, borderwidth=0, highlightthickness=0).place(x=0, y=0)
 
+# Variables
+variable_mapa = 0
+
 
 # Funciones
 
+def abrir_nivel():
+    global lvl, variable_mapa
+    if lvl.get() == 1:
+        variable_mapa = 1
+    elif lvl.get() == 2:
+        variable_mapa = 2
+    elif lvl.get() == 3:
+        variable_mapa = 3
+    elif lvl.get() == 4:
+        variable_mapa = 4
+    elif lvl.get() == 5:
+        variable_mapa = 5
+
+
 def pagina2_ayuda():
-    ventana_pagina2 = Toplevel()
-    ventana_pagina2.title("Road Figther")
+    ventana0.destroy()
+    ventana_pagina2 = Tk()
+    ventana_pagina2.title("Road Figther Plus")
     ventana_pagina2.geometry("950x600")
     ventana_pagina2.config(bg="#EFE4B0")
 
@@ -73,24 +92,14 @@ def pagina2_ayuda():
     caidas_img = PhotoImage(file="caidas.png")
     caidas = Label(ventana_pagina2, image=caidas_img, borderwidth=0, highlightthickness=0).place(x=330, y=120)
 
+    anterior = Button(ventana0, text="anterior", font=(12), borderwidth=0, highlightthickness=0,
+                      command=ayuda).place(x=150, y=550)
+
     ventana_pagina2.mainloop()
 
 
-"""
-    objetos_img = PhotoImage(file="objetos.png")
-    objetos = Label(ventana_pagina2,image= objetos_img,borderwidth=0, highlightthickness=0).place(x=360,y=200)
-
-    Mensaje2 = Label(ventana0,font=(12),bg="white",text="Habrán 3 tipos de enemigos, los cuales tendrán comportamientos diferentes:\n El primero será el skater verde, el cual simplemente aparecerá y estorbará.\nEl segundo será el skater azul, el cual cambiara de trayectoria aleatoriamente.\nEl tercero será el skater rojo, el cual tratará siempre de hacer caer al jugador"
-    ,borderwidth=0, highlightthickness=0).place(x=200,y=300)
-
-    enemigos_img = PhotoImage(file="enemigos.png")
-    Enemigos = Label(ventana0,image= enemigos_img,borderwidth=0, highlightthickness=0).place(x=370,y=400)
-"""
-
-
 def ayuda():
-    ventana0 = Toplevel()
-    ventana_principal.iconify()
+    ventana0 = Tk()
     ventana0.title("Road Figther Plus")
     ventana0.geometry("950x600")
     ventana0.config(bg="#EFE4B0")
@@ -116,274 +125,161 @@ def ayuda():
 
 
 def abrir_mapa_1():
-    ventana1 = Toplevel()
-    ventana_principal.iconify()
-    ventana1.title("Road Figther Plus")
-    ventana1.geometry("950x600")
-    # Mapa
-    canvas_mapa = Canvas(ventana1, width=950, height=600, borderwidth=0, highlightthickness=0)
-    img_mapa = PhotoImage(file="mapa.png")
-    mapa = canvas_mapa.create_image(473, -900, image=img_mapa)
-    canvas_mapa.pack()
-    # barras laterales
-    Score = Label(ventana1, text="Score", borderwidth=0, highlightthickness=0, bg="#EFE4B0",
-                  font="Comic 15 bold").place(x=800, y=40)
-    Hambre = Label(ventana1, text="Hunger", borderwidth=0, highlightthickness=0, bg="#EFE4B0",
-                   font="Comic 15 bold").place(x=800, y=140)
-    # skate principal
-    canvas_personaje = Canvas(ventana1, width=525, height=157, bg="#C8BFE7", borderwidth=0, highlightthickness=0)
-    img_personaje = PhotoImage(file="skate main.png")
-    personaje = canvas_personaje.create_image(275, 79, image=img_personaje)
-    canvas_personaje.place(x=220, y=400)
+    global variable_mapa
+    if variable_mapa == 1 or variable_mapa == 0:
+        global rival, rival_img
+        ventana_principal.destroy()
+        ventana_mapa1 = Tk()
+        ventana_mapa1.title("Road Figther Plus")
+        ventana_mapa1.geometry("950x600")
+        # Mapa
+        canvas_mapa = Canvas(ventana_mapa1, width=950, height=600, borderwidth=0, highlightthickness=0)
+        img_mapa = PhotoImage(file="mapa.png")
+        mapa = canvas_mapa.create_image(473, -900, image=img_mapa)
+        global img_personaje
+        img_personaje = PhotoImage(file="skate main.png")
+        global personaje
+        personaje = canvas_mapa.create_image(475, 510, image=img_personaje)
+        global img_caidap
+        img_caidap = PhotoImage(file="caida.png")
+        canvas_mapa.pack()
+        # barras laterales
+        i = 0
+        Score = Label(ventana_mapa1, text="Score", borderwidth=0, highlightthickness=0, bg="#EFE4B0",
+                      font="Comic 15 bold").place(x=800, y=40)
+        Hambre = Label(ventana_mapa1, text="Hunger", borderwidth=0, highlightthickness=0, bg="#EFE4B0",
+                       font="Comic 15 bold").place(x=800, y=140)
+        Hambre_valor = Label(ventana_mapa1, text=i, borderwidth=0, highlightthickness=0, bg="#EFE4B0",
+                             font="Comic 15 bold").place(x=825, y=165)
 
-    for x in range(1, 2300):
-        canvas_mapa.move(1, 0, 1)
-        ventana1.update()
-        time.sleep(0.0007)
+        # Funciones
+        while i <= 50:
+            lista = list(time.localtime())
+            if lista[5] != 0:
+                if lista[5] % 1 == 0:
+                    i += 2
+            Hambre_valor = Label(ventana_mapa1, text=i, borderwidth=0, highlightthickness=0, bg="#EFE4B0",
+                                 font="Comic 15 bold").place(x=825, y=165)
 
-    ventana1.mainloop()
+            def movimiento(event):
+                global caidap, personaje, img_personaje
+                if event.keysym == "Left":
+                    if int(canvas_mapa.coords(personaje)[0]) > 245:
+                        canvas_mapa.move(mapa, 0, 10)
+                        canvas_mapa.move(personaje, -10, 0)
+                        # ventana_mapa1.update()
+                        print(canvas_mapa.coords(personaje))
+                    else:
+                        img_personaje = PhotoImage(file="caida.png")
+                        personaje = canvas_mapa.create_image(245, 510, image=img_personaje)
+                        ventana_mapa1.update()
+                        time.sleep(1)
+                        canvas_mapa.delete(personaje)
+                        img_personaje = PhotoImage(file="skate main.png")
+                        personaje = canvas_mapa.create_image(475, 510, image=img_personaje)
 
+                if event.keysym == "Up":
+                    if int(canvas_mapa.coords(personaje)[0]) < 715:
+                        canvas_mapa.move(personaje, 10, 0)
+                        canvas_mapa.move(mapa, 0, 10)
+                    else:
+                        img_personaje = PhotoImage(file="caida.png")
+                        personaje = canvas_mapa.create_image(715, 510, image=img_personaje)
+                        ventana_mapa1.update()
+                        time.sleep(1)
+                        canvas_mapa.delete(personaje)
+                        img_personaje = PhotoImage(file="skate main.png")
+                        personaje = canvas_mapa.create_image(475, 510, image=img_personaje)
 
-def abrir_nivel_1():
-    ventana1 = Toplevel()
-    ventana_principal.iconify()
-    ventana1.title("Road Figther Plus")
-    ventana1.geometry("950x600")
-    # Fondo
-    Fondo_img = PhotoImage(file="fondo.png")
-    Fondo = Label(ventana1, image=Fondo_img, borderwidth=0, highlightthickness=0).place(x=0, y=0)
-    RDP = PhotoImage(file="RDP.png")
-    Road_fighter = Label(ventana1, image=RDP, borderwidth=0, highlightthickness=0).place(x=280, y=40)
+                if event.keysym == "Down":
+                    if int(canvas_mapa.coords(personaje)[0]) > 245:
+                        canvas_mapa.move(mapa, 0, 15)
+                        canvas_mapa.move(personaje, -10, 0)
+                    else:
+                        img_personaje = PhotoImage(file="caida.png")
+                        personaje = canvas_mapa.create_image(245, 510, image=img_personaje)
+                        ventana_mapa1.update()
+                        time.sleep(1)
+                        canvas_mapa.delete(personaje)
+                        img_personaje = PhotoImage(file="skate main.png")
+                        personaje = canvas_mapa.create_image(475, 510, image=img_personaje)
 
-    SinglePlayer = PhotoImage(file="Single.png")
-    solitario = Button(ventana1, image=SinglePlayer, bg="Black", borderwidth=0, highlightthickness=0,
-                       command=abrir_mapa_1).place(x=200, y=230)
+                if event.keysym == "Right":
+                    if int(canvas_mapa.coords(personaje)[0]) < 715:
+                        canvas_mapa.move(personaje, 10, 0)
+                        canvas_mapa.move(mapa, 0, 15)
+                    else:
+                        img_personaje = PhotoImage(file="caida.png")
+                        personaje = canvas_mapa.create_image(715, 510, image=img_personaje)
+                        ventana_mapa1.update()
+                        time.sleep(1)
+                        canvas_mapa.delete(personaje)
+                        img_personaje = PhotoImage(file="skate main.png")
+                        personaje = canvas_mapa.create_image(475, 510, image=img_personaje)
 
-    MultiPlayer = PhotoImage(file="Multiplayer.png")
-    multiplayer = Button(ventana1, image=MultiPlayer, bg="Black", borderwidth=0, highlightthickness=0).place(x=500,
-                                                                                                             y=230)
+            def enemigos():
+                global rival, rival_img
+                x = random.randint(1, 3)
+                y = random.randint(1, 3)
+                if y == 1:
+                    pos = 265
+                elif y == 2:
+                    pos = 475
+                elif y == 3:
+                    pos = 685
+                if x == 1:
+                    rival_img = PhotoImage(file="enemigo1.png")
+                    rival = canvas_mapa.create_image(pos, 100, image=rival_img)
+                    for i in range(1000):
+                        canvas_mapa.move(rival, 0, 0.1)
+                        ventana_mapa1.update()
+                elif x == 2:
+                    rival_img = PhotoImage(file="enemigo2.png")
+                    rival = canvas_mapa.create_image(pos, 100, image=rival_img)
+                    for i in range(1000):
+                        canvas_mapa.move(rival, 0, 0.1)
+                        ventana_mapa1.update()
+                elif x == 3:
+                    rival_img = PhotoImage(file="enemigo3.png")
+                    rival = canvas_mapa.create_image(pos, 100, image=rival_img)
+                    for i in range(1000):
+                        canvas_mapa.move(rival, 0, 0.1)
+                        ventana_mapa1.update()
+                print("finish")
 
-    How_to_play = Button(ventana1, text="How to play?", font=(12), bg="Black", fg="white", activebackground="white",
-                         command=ayuda, borderwidth=0, highlightthickness=0).place(x=550, y=430)
+            enemigos()
+            # skate principal
+            canvas_mapa.bind_all("<Up>", movimiento)
+            canvas_mapa.bind_all("<Left>", movimiento)
+            canvas_mapa.bind_all("<Right>", movimiento)
+            canvas_mapa.bind_all("<Down>", movimiento)
 
-    # Niveles
+        ventana_mapa1.mainloop()
 
-    nivel = Label(ventana1, text="Select level :", font=(12), bg="black", fg="white").place(x=100, y=430)
-
-    lvl = IntVar()
-
-    lvl1 = Radiobutton(ventana1, text="1", activebackground="#00FF04", value=1, variable=lvl,
-                       command=abrir_nivel_1).place(x=200, y=430)
-    lvl2 = Radiobutton(ventana1, text="2", activebackground="#62FF00", value=2, variable=lvl,
-                       command=abrir_nivel_2).place(x=233, y=430)
-    lvl3 = Radiobutton(ventana1, text="3", activebackground="yellow", value=3, variable=lvl,
-                       command=abrir_nivel_3).place(x=266, y=430)
-    lvl4 = Radiobutton(ventana1, text="4", activebackground="#FFA200", value=4, variable=lvl,
-                       command=abrir_nivel_4).place(x=299, y=430)
-    lvl5 = Radiobutton(ventana1, text="5", activebackground="red", value=5, variable=lvl, command=abrir_nivel_5).place(
-        x=333, y=430)
-
-    ventana1.mainloop()
-
-
-def abrir_mapa_2():
-    ventana2 = Toplevel()
-    ventana_principal.iconify()
-    ventana2.title("Road Figther Plus")
-    ventana2.geometry("950x600")
-    ventana2.mainloop()
-
-
-def abrir_nivel_2():
-    ventana2 = Toplevel()
-    ventana_principal.iconify()
-    ventana2.title("Road Figther Plus")
-    ventana2.geometry("950x600")
-    # Fondo
-    Fondo_img = PhotoImage(file="fondo.png")
-    Fondo = Label(ventana2, image=Fondo_img, borderwidth=0, highlightthickness=0).place(x=0, y=0)
-    RDP = PhotoImage(file="RDP.png")
-    Road_fighter = Label(ventana2, image=RDP, borderwidth=0, highlightthickness=0).place(x=280, y=40)
-
-    SinglePlayer = PhotoImage(file="Single.png")
-    solitario = Button(ventana2, image=SinglePlayer, bg="Black", borderwidth=0, highlightthickness=0,
-                       command=abrir_mapa_2).place(x=200, y=230)
-
-    MultiPlayer = PhotoImage(file="Multiplayer.png")
-    multiplayer = Button(ventana2, image=MultiPlayer, bg="Black", borderwidth=0, highlightthickness=0).place(x=500,
-                                                                                                             y=230)
-
-    How_to_play = Button(ventana2, text="How to play?", font=(12), bg="Black", fg="white", activebackground="white",
-                         command=ayuda, borderwidth=0, highlightthickness=0).place(x=550, y=430)
-
-    # Niveles
-
-    nivel = Label(ventana2, text="Select level :", font=(12), bg="black", fg="white").place(x=100, y=430)
-
-    lvl = IntVar()
-
-    lvl1 = Radiobutton(ventana2, text="1", activebackground="#00FF04", value=1, variable=lvl,
-                       command=abrir_nivel_1).place(x=200, y=430)
-    lvl2 = Radiobutton(ventana2, text="2", activebackground="#62FF00", value=2, variable=lvl,
-                       command=abrir_nivel_2).place(x=233, y=430)
-    lvl3 = Radiobutton(ventana2, text="3", activebackground="yellow", value=3, variable=lvl,
-                       command=abrir_nivel_3).place(x=266, y=430)
-    lvl4 = Radiobutton(ventana2, text="4", activebackground="#FFA200", value=4, variable=lvl,
-                       command=abrir_nivel_4).place(x=299, y=430)
-    lvl5 = Radiobutton(ventana2, text="5", activebackground="red", value=5, variable=lvl, command=abrir_nivel_5).place(
-        x=333, y=430)
-
-    ventana2.mainloop()
-
-
-def abrir_mapa_3():
-    ventana3 = Toplevel()
-    ventana_principal.iconify()
-    ventana3.title("Road Figther Plus")
-    ventana3.geometry("950x600")
-    ventana3.mainloop()
-
-
-def abrir_nivel_3():
-    ventana3 = Toplevel()
-    ventana_principal.iconify()
-    ventana3.title("Road Figther Plus")
-    ventana3.geometry("950x600")
-    # Fondo
-    Fondo_img = PhotoImage(file="fondo.png")
-    Fondo = Label(ventana3, image=Fondo_img, borderwidth=0, highlightthickness=0).place(x=0, y=0)
-    RDP = PhotoImage(file="RDP.png")
-    Road_fighter = Label(ventana3, image=RDP, borderwidth=0, highlightthickness=0).place(x=280, y=40)
-
-    SinglePlayer = PhotoImage(file="Single.png")
-    solitario = Button(ventana3, image=SinglePlayer, bg="Black", borderwidth=0, highlightthickness=0,
-                       command=abrir_mapa_3).place(x=200, y=230)
-
-    MultiPlayer = PhotoImage(file="Multiplayer.png")
-    multiplayer = Button(ventana3, image=MultiPlayer, bg="Black", borderwidth=0, highlightthickness=0).place(x=500,
-                                                                                                             y=230)
-
-    How_to_play = Button(ventana3, text="How to play?", font=(12), bg="Black", fg="white", activebackground="white",
-                         command=ayuda, borderwidth=0, highlightthickness=0).place(x=550, y=430)
-
-    # Niveles
-
-    nivel = Label(ventana3, text="Select level :", font=(12), bg="black", fg="white").place(x=100, y=430)
-
-    lvl = IntVar()
-
-    lvl1 = Radiobutton(ventana3, text="1", activebackground="#00FF04", value=1, variable=lvl,
-                       command=abrir_nivel_1).place(x=200, y=430)
-    lvl2 = Radiobutton(ventana3, text="2", activebackground="#62FF00", value=2, variable=lvl,
-                       command=abrir_nivel_2).place(x=233, y=430)
-    lvl3 = Radiobutton(ventana3, text="3", activebackground="yellow", value=3, variable=lvl,
-                       command=abrir_nivel_3).place(x=266, y=430)
-    lvl4 = Radiobutton(ventana3, text="4", activebackground="#FFA200", value=4, variable=lvl,
-                       command=abrir_nivel_4).place(x=299, y=430)
-    lvl5 = Radiobutton(ventana3, text="5", activebackground="red", value=5, variable=lvl, command=abrir_nivel_5).place(
-        x=333, y=430)
-
-    ventana3.mainloop()
-
-
-def abrir_mapa_4():
-    ventana4 = Toplevel()
-    ventana_principal.iconify()
-    ventana4.title("Road Figther Plus")
-    ventana4.geometry("950x600")
-    ventana4.mainloop()
-
-
-def abrir_nivel_4():
-    ventana4 = Toplevel()
-    ventana_principal.iconify()
-    ventana4.title("Road Figther Plus")
-    ventana4.geometry("950x600")
-    # Fondo
-    Fondo_img = PhotoImage(file="fondo.png")
-    Fondo = Label(ventana4, image=Fondo_img, borderwidth=0, highlightthickness=0).place(x=0, y=0)
-    RDP = PhotoImage(file="RDP.png")
-    Road_fighter = Label(ventana4, image=RDP, borderwidth=0, highlightthickness=0).place(x=280, y=40)
-
-    SinglePlayer = PhotoImage(file="Single.png")
-    solitario = Button(ventana4, image=SinglePlayer, bg="Black", borderwidth=0, highlightthickness=0,
-                       command=abrir_mapa_4).place(x=200, y=230)
-
-    MultiPlayer = PhotoImage(file="Multiplayer.png")
-    multiplayer = Button(ventana4, image=MultiPlayer, bg="Black", borderwidth=0, highlightthickness=0).place(x=500,
-                                                                                                             y=230)
-
-    How_to_play = Button(ventana4, text="How to play?", font=(12), bg="Black", fg="white", activebackground="white",
-                         command=ayuda, borderwidth=0, highlightthickness=0).place(x=550, y=430)
-
-    # Niveles
-
-    nivel = Label(ventana4, text="Select level :", font=(12), bg="black", fg="white").place(x=100, y=430)
-
-    lvl = IntVar()
-
-    lvl1 = Radiobutton(ventana4, text="1", activebackground="#00FF04", value=1, variable=lvl,
-                       command=abrir_nivel_1).place(x=200, y=430)
-    lvl2 = Radiobutton(ventana4, text="2", activebackground="#62FF00", value=2, variable=lvl,
-                       command=abrir_nivel_2).place(x=233, y=430)
-    lvl3 = Radiobutton(ventana4, text="3", activebackground="yellow", value=3, variable=lvl,
-                       command=abrir_nivel_3).place(x=266, y=430)
-    lvl4 = Radiobutton(ventana4, text="4", activebackground="#FFA200", value=4, variable=lvl,
-                       command=abrir_nivel_4).place(x=299, y=430)
-    lvl5 = Radiobutton(ventana4, text="5", activebackground="red", value=5, variable=lvl, command=abrir_nivel_5).place(
-        x=333, y=430)
-
-    ventana4.mainloop()
-
-
-def abrir_mapa_5():
-    ventana5 = Toplevel()
-    ventana_principal.iconify()
-    ventana5.title("Road Figther Plus")
-    ventana5.geometry("950x600")
-    ventana5.mainloop()
-
-
-def abrir_nivel_5():
-    ventana5 = Toplevel()
-    ventana_principal.iconify()
-    ventana5.title("Road Figther Plus")
-    ventana5.geometry("950x600")
-    # Fondo
-    Fondo_img = PhotoImage(file="fondo.png")
-    Fondo = Label(ventana5, image=Fondo_img, borderwidth=0, highlightthickness=0).place(x=0, y=0)
-    RDP = PhotoImage(file="RDP.png")
-    Road_fighter = Label(ventana5, image=RDP, borderwidth=0, highlightthickness=0).place(x=280, y=40)
-
-    SinglePlayer = PhotoImage(file="Single.png")
-    solitario = Button(ventana5, image=SinglePlayer, bg="Black", borderwidth=0, highlightthickness=0,
-                       command=abrir_mapa_5).place(x=200, y=230)
-
-    MultiPlayer = PhotoImage(file="Multiplayer.png")
-    multiplayer = Button(ventana5, image=MultiPlayer, bg="Black", borderwidth=0, highlightthickness=0).place(x=500,
-                                                                                                             y=230)
-
-    How_to_play = Button(ventana5, text="How to play?", font=(12), bg="Black", fg="white", activebackground="white",
-                         command=ayuda, borderwidth=0, highlightthickness=0).place(x=550, y=430)
-
-    # Niveles
-
-    nivel = Label(ventana5, text="Select level :", font=(12), bg="black", fg="white").place(x=100, y=430)
-
-    lvl = IntVar()
-
-    lvl1 = Radiobutton(ventana5, text="1", activebackground="#00FF04", value=1, variable=lvl,
-                       command=abrir_nivel_1).place(x=200, y=430)
-    lvl2 = Radiobutton(ventana5, text="2", activebackground="#62FF00", value=2, variable=lvl,
-                       command=abrir_nivel_2).place(x=233, y=430)
-    lvl3 = Radiobutton(ventana5, text="3", activebackground="yellow", value=3, variable=lvl,
-                       command=abrir_nivel_3).place(x=266, y=430)
-    lvl4 = Radiobutton(ventana5, text="4", activebackground="#FFA200", value=4, variable=lvl,
-                       command=abrir_nivel_4).place(x=299, y=430)
-    lvl5 = Radiobutton(ventana5, text="5", activebackground="red", value=5, variable=lvl, command=abrir_nivel_5).place(
-        x=333, y=430)
-
-    ventana5.mainloop()
+    elif variable_mapa == 2:
+        ventana2 = Tk()
+        ventana_principal.destroy()
+        ventana2.title("Road Figther Plus")
+        ventana2.geometry("950x600")
+        ventana2.mainloop()
+    elif variable_mapa == 3:
+        ventana3 = Tk()
+        ventana_principal.destroy()
+        ventana3.title("Road Figther Plus")
+        ventana3.geometry("950x600")
+        ventana3.mainloop()
+    elif variable_mapa == 4:
+        ventana4 = Tk()
+        ventana_principal.destroy()
+        ventana4.title("Road Figther Plus")
+        ventana4.geometry("950x600")
+        ventana4.mainloop()
+    elif variable_mapa == 5:
+        ventana5 = Tk()
+        ventana_principal.destroy()
+        ventana5.title("Road Figther Plus")
+        ventana5.geometry("950x600")
+        ventana5.mainloop()
 
 
 # Botones
@@ -408,14 +304,14 @@ nivel = Label(ventana_principal, text="Select level :", font=(12), bg="black", f
 lvl = IntVar()
 
 lvl1 = Radiobutton(ventana_principal, text="1", activebackground="#00FF04", value=1, variable=lvl,
-                   command=abrir_nivel_1).place(x=200, y=430)
+                   command=abrir_nivel).place(x=200, y=430)
 lvl2 = Radiobutton(ventana_principal, text="2", activebackground="#62FF00", value=2, variable=lvl,
-                   command=abrir_nivel_2).place(x=233, y=430)
+                   command=abrir_nivel).place(x=233, y=430)
 lvl3 = Radiobutton(ventana_principal, text="3", activebackground="yellow", value=3, variable=lvl,
-                   command=abrir_nivel_3).place(x=266, y=430)
+                   command=abrir_nivel).place(x=266, y=430)
 lvl4 = Radiobutton(ventana_principal, text="4", activebackground="#FFA200", value=4, variable=lvl,
-                   command=abrir_nivel_4).place(x=299, y=430)
+                   command=abrir_nivel).place(x=299, y=430)
 lvl5 = Radiobutton(ventana_principal, text="5", activebackground="red", value=5, variable=lvl,
-                   command=abrir_nivel_5).place(x=333, y=430)
+                   command=abrir_nivel).place(x=333, y=430)
 
 ventana_principal.mainloop()
